@@ -1,4 +1,5 @@
 #!/bin/bash
+set -m
 
 #defaults
 POSTGRES="/usr/lib/postgresql/9.4/bin/postgres"
@@ -25,5 +26,19 @@ su - postgres  -c "/usr/lib/postgresql/9.4/bin/initdb -D /data"
 #set default password
 su - postgres -c "$POSTGRES --single -c config_file=$CONFIG_PATH/postgresql.conf <<< \"ALTER USER postgres WITH PASSWORD '$PG_PASSWORD';\""
 
-#now run
-su - postgres -c "$POSTGRES -c config_file=$CONFIG_PATH/postgresql.conf"
+#start postgres in background
+su - postgres -c "$POSTGRES -c config_file=$CONFIG_PATH/postgresql.conf" &
+
+#wait for postgres to start
+sleep 10
+
+#run bootstrap script if present
+if [ -z $POSTGRES_BOOTSTRAP_SCRIPT ]; then
+  echo "You need to pass in a START_SCRIPT url"
+  exit 1
+else
+  curl -s $POSTGRES_BOOTSTRAP_SCRIPT | /bin/bash
+fi
+
+#bring postgres to foreground
+fg
