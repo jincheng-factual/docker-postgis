@@ -34,8 +34,7 @@ sleep 10
 
 #run bootstrap script if present
 if [ -z $POSTGRES_BOOTSTRAP_SCRIPT ]; then
-  echo "You need to pass in a START_SCRIPT url"
-  exit 1
+  echo "no POSTGRES_BOOTSTRAP_SCRIPT, skipping"
 else
   curl -s $POSTGRES_BOOTSTRAP_SCRIPT | /bin/bash
 fi
