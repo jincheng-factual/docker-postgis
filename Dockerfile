@@ -1,7 +1,8 @@
 FROM boritzio/docker-base
 
 RUN echo 'deb http://apt.postgresql.org/pub/repos/apt/ trusty-pgdg main' >> /etc/apt/sources.list.d/pgdg.list
-RUN apt-get install wget
+RUN apt-get install -y wget
+RUN apt-get install -y rsyslog
 RUN wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
 RUN sudo apt-get update
 
